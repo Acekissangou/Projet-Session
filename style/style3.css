@@ -1,0 +1,23 @@
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .btn {
+            padding: 6px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .btn-add { background: #4CAF50; color: white; }
+        .btn-edit { background: #2196F3; color: white; }
+        .btn-del { background: #f44336; color: white; }
+
+        .form-add {
+            display: none;
+            margin-top: 20px;
+        }

@@ -1,0 +1,465 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Funnel Sans', sans-serif;
+}
+
+body {
+    background: #f5f6fa;
+    color: #222;
+}
+
+
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px; /* important */
+    background: #0b1220;
+    color: white;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+
+.topbar .title {
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Dancing Script', cursive;
+    /* margin-left: 0 auto; */
+    margin-left: 30px;
+}
+
+.top-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.top-icons span {
+    order: 2;
+    font-size: 1.1rem;
+    font-weight: 500;
+    position: static;
+    white-space: nowrap;
+}
+
+.top-icons .avatar-icon {
+    order: 1;
+}
+
+.topbar .deco {
+    font-size: 0.9rem;
+    cursor: pointer;
+    /* position: relative; */
+    right: 120px;
+    top: 25px;
+    color: #ffffff;
+    /* background: rgba(186, 10, 10, 0.1); */
+    padding: 2px;
+    border-radius: 6px;
+    /* width: 100%; */
+}
+
+.icon-deco {
+    margin-left: 6px;
+}
+
+.topbar .deco a {
+    text-decoration: none;
+    color: #ffffff;
+    
+
+}
+
+.avatar-icon {
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    background: #3bd7ef;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+    transition: scale 0.3s ease;
+}
+
+.avatar-icon:hover {
+    scale: 1.1;
+}
+
+  #menu-btn {
+    font-size: 24px;
+    cursor: pointer;
+    color: #ffffff;
+    /* z-index: 1001; */
+    background: none;
+    border: none;
+    /* position: fixed; */
+    /* transition: transform 0.3s ease; */
+}
+
+  #menu-btn2 {
+    font-size: 24px;
+    cursor: pointer;
+    color: #ffffff;
+    /* z-index: 1001; */
+    background: none;
+    border: none;
+    position: relative;
+    top: 4px;
+
+    /* transition: transform 0.3s ease; */
+}
+
+
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #111;
+    color: #fff;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    z-index: 2000;
+
+}
+
+.sidebar.closed {
+    transform: translateX(-100%);
+}
+
+.sidebar-logo{
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-logo span{
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'Dancing Script', cursive;
+    color: #ffffff;
+    margin-top: 10px;
+    
+}
+
+.avatar-icon-sidebar {
+    font-size: 24px;
+    color: rgb(0, 0, 0);
+    background: #3bd7ef;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.sidebar-user{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    font-size: 14px;
+}
+
+.sidebar-user p{
+    position: absolute;
+    left: 77px;
+    top: 22%;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    padding: 2px;
+    border-radius: 6px;
+    /* background-color: #1c8c4a; */
+}
+
+.sidebar-user span{
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.sidebar-menu a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    /* border-bottom: 1px solid #ffffff; */
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background-color: #333;
+}
+
+.sidebar-logout a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    color: #ff4d4d;
+    text-decoration: none;
+    position: absolute;
+    bottom: 0;
+}
+
+.container {
+    padding-top: 90px; /* hauteur topbar + marge */
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 20px;
+}
+
+
+.btn-primary {
+    background: #2f6fed;
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.btn-plus {
+    font-size: 1.2rem;
+    /* margin-top: 3px; */
+    
+}
+
+.stats {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.card {
+    position: relative;
+    background: white;
+    flex: 1;
+    padding: 15px;
+    border-radius: 15px;
+    height: 200px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.card i {
+    font-size: 32px;
+    color: #2f6fed;
+}
+
+.card h2 {
+    font-size: 2.5rem;
+    margin: 15px 0;
+}
+
+.png{
+    width: 200px;
+    height: 200px;
+    background-image: url('../images/meet.png');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    right: 30px;
+    top: 0;
+}
+
+.png1{
+    width: 170px;
+    height: 170px;
+    background-image: url('../images/meet1.png');
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    right: 30px;
+}
+
+
+.section h3 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.reservation {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.badge {
+    margin-left: auto;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+
+
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+}
+
+.bottom-nav i {
+    font-size: 20px;
+    color: #999;
+}
+
+.bottom-nav .active {
+    color: #2f6fed;
+}
+
+
+.table-reservations {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.table-reservations th,
+.table-reservations td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.table-reservations th {
+    background-color: #0b1220;
+    color: white;
+}
+
+.btn-cancel {
+    padding: 6px 10px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-cancel:hover {
+    background-color: #b91c1c;
+}
+
+.reservation-vide {
+    text-align: center;
+}
+
+.message {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 6px;
+    border-radius: 6px;
+    margin: 20px 0 15px 0;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* message succès */
+.message.success {
+    background: rgba(43, 244, 17, 0.1);
+    color: #017e05;
+}
+
+/* message erreur */
+.message.error {
+    background: rgba(246, 15, 15, 0.1);
+    color: #6c0404;
+}
+
+
+.qr_code_btn{
+    width: 60px;
+    height: 30px;
+    /* border: 3px; */
+    border-radius: 6px;
+    border: none;
+    background-color: #09ce10;
+    cursor: pointer;
+}
+
+.qr_code_btn:hover{
+    background-color: #017e05;
+}
+
+.qr_code_btn i{
+    color: white;
+}
+
+/* tonton le modal */
+
+.qr-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+}
+
+.qr-modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 350px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+}
+
+.qr-modal img {
+    width: 250px;
+    margin-top: 15px;
+}
+
+.qr-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 22px;
+    cursor: pointer;
+}
