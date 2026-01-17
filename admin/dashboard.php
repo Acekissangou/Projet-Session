@@ -196,6 +196,11 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
                 <i class="fa-solid fa-toolbox"></i>
                 <span>Gérer les salles</span>
             </a>
+
+            <a href="../admin/scan_qr.php">
+                <i class="fas fa-clipboard-check"></i>
+                <span>Valider une réservation</span>
+            </a>
     </nav>
 
     <div class="sidebar-logout">

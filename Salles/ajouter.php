@@ -130,6 +130,15 @@ $reservationsLink = ($roleUser === 'admin')
             <span>Gérer les salles</span>
         </a>
     <?php endif; ?>
+
+    <?php if ($roleUser === 'admin'): ?>
+        <a href="../admin/scan_qr.php">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Valider une reservation</span>
+        </a>
+    <?php endif; ?>
+
+    
 </nav>
 
 
