@@ -324,6 +324,8 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 
+
+</section>
 <div id="qrModal" class="qr-modal">
     <div class="qr-modal-content">
         <span class="qr-close">&times;</span>
@@ -331,8 +333,6 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
         <img id="qrImage" src="" alt="QR code">
     </div>
 </div>
-
-</section>
 </main>
 <script src="../js/userIcon.js"></script>
 </body>
