@@ -35,11 +35,11 @@ if (message) {
 }
 
 // Toggle upload profil div
-if (avatar && maDiv) {
-    avatar.addEventListener('click', () => {
-        maDiv.style.visibility = (maDiv.style.visibility === 'hidden') ? 'visible' : 'hidden';
-    });
-}
+// if (avatar && maDiv) {
+//     avatar.addEventListener('click', () => {
+//         maDiv.style.visibility = (maDiv.style.visibility === 'hidden') ? 'visible' : 'hidden';
+//     });
+// }
 
 
 // QR Code display

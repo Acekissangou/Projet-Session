@@ -335,5 +335,34 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
 </div>
 </main>
 <script src="../js/userIcon.js"></script>
+<script>
+// const qrBtns = document.querySelectorAll('.qr_code_btn');
+// const qrModal = document.getElementById('qrModal');
+// const qrImage = document.getElementById('qrImage');
+// const qrClose = document.querySelector('.qr-close');
+
+// qrBtns.forEach(btn => {
+//     btn.addEventListener('click', () => {
+//         const token = btn.dataset.token;
+
+//         // chemin vers l'image QR (déjà générée)
+//         qrImage.src = `../qrCodes/${token}.png`;
+
+//         qrModal.style.display = 'flex';
+//     });
+// });
+
+// // Fermer le modal
+// qrClose.addEventListener('click', () => {
+//     qrModal.style.display = 'none';
+// });
+
+// // Fermer si clic en dehors du modal
+// window.addEventListener('click', (e) => {
+//     if (e.target == qrModal) {
+//         qrModal.style.display = 'none';
+//     }
+// });
+ </script>
 </body>
 </html>
