@@ -99,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             require_once '../lib/phpqrcode/qrlib.php';
             $qrPath = '../qrCodes/' . $qr_token . '.png';
             QRcode::png(
-                "http://localhost/ProjetSession/admin/scan_qr.php?token=" . $qr_token,
+                $qr_token,
                 $qrPath, QR_ECLEVEL_H, 5
             );
         }
@@ -244,7 +244,7 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
             <div class="png1"></div>
             <i class="fa-solid fa-door-open"></i>
             <h2><?= $nbSalles ?></h2>  <!--remplacé par le nombre de salles dans la Bd-->
-            <span>Nos Salles libres</span>
+            <span>Notre nombres salle libres</span>
         </div>
     </div>
 
@@ -336,6 +336,7 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
     <div class="qr-modal-content">
         <span class="qr-close">&times;</span>
         <h3>QR Code de la réservation</h3>
+        <p>Ce code Qr vous sera demandé pour accéder à la salle <br> en plus d'une pièce d'identité</p>
         <img id="qrImage" src="" alt="QR code">
     </div>
 </div>
