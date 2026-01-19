@@ -194,11 +194,6 @@ $reservationsLink = ($roleUser === 'admin')
                     <td><?= htmlspecialchars($salle['capacite']) ?></td>
                     <td><?= htmlspecialchars($salle['categorie']) ?></td>
                     <td>
-                        <?=
-                        strlen($salle['description']) > 40
-                            ? substr(htmlspecialchars($salle['description']), 0, 40) . '...'
-                            : htmlspecialchars($salle['description']);
-                        ?>
                         <button class="btn-view" data-description="<?= htmlspecialchars($salle['description']) ?>">Voir plus</button>
                     </td>
                     <td>

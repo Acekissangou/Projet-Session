@@ -197,13 +197,8 @@ $reservationsLink = ($roleUser === 'admin')
                 <td><?= htmlspecialchars($salle['capacite']) ?></td>
                 <td><?= htmlspecialchars($salle['categorie']) ?></td>
                 <td>
-                    <?=
-                        strlen($salle['description']) > 30
-                            ? substr(htmlspecialchars($salle['description']), 0, 30) . '...'
-                            : htmlspecialchars($salle['description']);
-                    ?>
                         <button class="btn-view" data-description="<?= htmlspecialchars($salle['description']) ?>">Voir plus</button>
-                    </td>
+                </td>
                 </tr>
                 <?php endforeach; ?>
                 <div id="modalDescription" class="modal">
