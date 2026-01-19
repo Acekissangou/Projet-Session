@@ -13,39 +13,45 @@ $currentDate = date('Y-m-d');
 $currentTime = date('H:i:s');
 
 
+
 //Récupération de l'id de l'user connecté
 $userId = $_SESSION['user_id'];
 
 $reqReservations = $pdo_init->prepare(
     "SELECT COUNT(*) FROM reservations WHERE user_id = ?"
-);
-$reqReservations->execute([$userId]);
-$nbReservations = $reqReservations->fetchColumn();
-
-$reqSalles = $pdo_init->query(
-    "SELECT COUNT(*) FROM salles"
-);
-$nbSalles = $reqSalles->fetchColumn();
-
-// Récupération du nom
-$nomUser = $_SESSION['nom'];
-
-$nomUser = strtoupper($nomUser); // tout en majuscule
-
-// Première lettre du nom (majuscule)
-$initiale = strtoupper(substr($nomUser, 0, 1));
-
-// reception des données de la reservation venant du formulaire dans ajouter.php
-
-$message = "";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-
+    );
+    $reqReservations->execute([$userId]);
+    $nbReservations = $reqReservations->fetchColumn();
+    
+    $reqSalles = $pdo_init->query(
+        "SELECT COUNT(*) FROM salles"
+        );
+        $nbSalles = $reqSalles->fetchColumn();
+        
+        // Récupération du nom
+        $nomUser = $_SESSION['nom'];
+        
+        $nomUser = strtoupper($nomUser); // tout en majuscule
+        
+        // Première lettre du nom (majuscule)
+        $initiale = strtoupper(substr($nomUser, 0, 1));
+        
+        // reception des données de la reservation venant du formulaire dans ajouter.php
+        
+        $message = "";
+        
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+            
     $user_id      = $_SESSION['user_id'];
     $salle_id     = $_POST['salle'];
     $date         = $_POST['date'];
     $heure_debut  = $_POST['heure_debut'];
     $heure_fin    = $_POST['heure_fin'];
+    
+    //Variables pour vérification (en cours)
+    $heureDebut0 = new DateTime($res['heure_debut']);
+    $heureFin0   = new DateTime($res['heure_fin']);
+    $interval0 = $heureDebut0->diff($heureFin0);
 
     // 1️⃣ Vérifier que l'heure de fin est après l'heure de début
     if ($heure_fin <= $heure_debut) {
