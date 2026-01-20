@@ -187,6 +187,7 @@ $reservationsLink = ($roleUser === 'admin')
                         <th>Capacité</th>
                         <th>Catégorie</th>
                         <th>Description</th>
+                        <th>Images</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -198,6 +199,10 @@ $reservationsLink = ($roleUser === 'admin')
                 <td><?= htmlspecialchars($salle['categorie']) ?></td>
                 <td>
                         <button class="btn-view" data-description="<?= htmlspecialchars($salle['description']) ?>">Voir plus</button>
+                </td>
+                <td>
+                        <button class="btn-img"><a href="../Salles/carousel.php?salle_id=<?= $salle['id'] ?>">Images</a></button>
+
                 </td>
                 </tr>
                 <?php endforeach; ?>

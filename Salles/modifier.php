@@ -15,11 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $capacite = $_POST['capacite'];
     $categrorie = $_POST['categorie'];
     $description = $_POST['description'];
+    $heure_minimale = $_POST['heure_minimale'];
 
     $update = $pdo_init->prepare(
-        "UPDATE salles SET nom = ?, capacite = ?, categorie = ?, description = ? WHERE id = ?"
+        "UPDATE salles SET nom = ?, capacite = ?, categorie = ?, description = ?, heure_minimale = ? WHERE id = ?"
     );
-    $update->execute([$nom, $capacite, $categrorie, $description, $id]);
+    $update->execute([$nom, $capacite, $categrorie, $description, $heure_minimale, $id]);
 
     header("Location: ../Salles/ajouter.php");
     exit;
@@ -31,5 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <input type="number" name="capacite" value="<?= $salle['capacite'] ?>">
     <input type="text" name="categorie" value="<?= $salle['categorie'] ?>">
     <input type="text" name ="description" value="<?= $salle['description'] ?>">
+    <input type="number" name="heure_minimale" value="<?= $salle['heure_minimale'] ?>">
     <button type="submit">Modifier</button>
 </form>

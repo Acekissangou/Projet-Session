@@ -1,0 +1,61 @@
+body{
+    /* background-color: #387780; */
+    /* background-color: #FE6847; */
+    /* background-color: #344055; */
+    /* background-color: #065143; */
+    background-color: #E0A890;
+}
+.carousel {
+    margin: 100px auto;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+}
+
+.group {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding-right: 2rem;
+    animation: spin 25s linear infinite;
+}
+
+.card {
+    flex: 0 0 500px;
+    height: 385px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.carousel:hover .group {
+    animation-play-state: paused;
+} 
+
+.card img:hover {
+    transform: scale(1.05);
+    transition: transform .3s;
+}
+
+@keyframes spin {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+h2{
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+}

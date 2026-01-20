@@ -38,12 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $capacite = intval($_POST['capacite']);
     $categorie = trim($_POST['categorie']);
     $descriptions = trim($_POST['descriptions'] ?? '');
+    $heure_minimale = trim($_POST['heure_minimale']);
 
-    if (empty($nom) || $capacite <= 0 || empty($categorie)) {
+    if (empty($nom) || $capacite <= 0 || empty($categorie) || empty($descriptions) || empty($heure_minimale)) {
         $message = "❌ Tous les champs sont obligatoires et la capacité doit être > 0.";
     } else {
-        $insert = $pdo_init->prepare("INSERT INTO salles (nom, capacite, categorie, description) VALUES (?, ?, ?, ?)");
-        $insert->execute([$nom, $capacite, $categorie, $descriptions]);
+        $insert = $pdo_init->prepare("INSERT INTO salles (nom, capacite, categorie, description, heure_minimale) VALUES (?, ?, ?, ?, ?)");
+        $insert->execute([$nom, $capacite, $categorie, $descriptions, $heure_minimale]);
         $message = "✅ Salle ajoutée avec succès.";
     }
 }
@@ -168,6 +169,7 @@ $reservationsLink = ($roleUser === 'admin')
         <input type="number" name="capacite" placeholder="Capacité" required min="1">
         <input type="text" name="categorie" placeholder="Catégorie de la salle" required>
         <input type="text" name="descriptions" placeholder="Descriptions" required>
+        <input type="number" name = "heure_minimale" placeholder="Heure minimale en Min" id="heure_minimale" min="1" step="1" required>
         <button type="submit" class="btn btn-add">
             <i class="fa-solid fa-floppy-disk"></i> Enregistrer
         </button>
@@ -184,6 +186,8 @@ $reservationsLink = ($roleUser === 'admin')
                 <th>Capacité</th>
                 <th>Catégorie</th>
                 <th>Descriptions</th>
+                <th>Images</th>
+                <th>Heure Minimale</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -195,6 +199,12 @@ $reservationsLink = ($roleUser === 'admin')
                     <td><?= htmlspecialchars($salle['categorie']) ?></td>
                     <td>
                         <button class="btn-view" data-description="<?= htmlspecialchars($salle['description']) ?>">Voir plus</button>
+                    </td>
+                    <td>
+                        <button class="btn-img"><a href="../admin/ajouter_images.php?salle_id=<?= $salle['id'] ?>">Ajouter Images</a></button>
+                    </td>
+                    <td>
+                        <?= htmlspecialchars($salle['heure_minimale']) ?><span> min</span>
                     </td>
                     <td>
                         <a href="../Salles/modifier.php?id=<?= $salle['id'] ?>" class="btn btn-edit">

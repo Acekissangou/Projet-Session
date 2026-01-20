@@ -329,3 +329,23 @@
 .btn-view:hover {
     background: #1f51c3;
 }
+
+.btn-img{
+    background: #2f6fed;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-img:hover{
+    background: #1f51c3;
+
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}

@@ -46,12 +46,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $heure_debut  = $_POST['heure_debut'];
     $heure_fin    = $_POST['heure_fin'];
 
+    // Variable pour verfication
+    $heure_debut0 = new datetime($heure_debut);
+    $heure_fin0 = new datetime($heure_fin);
+    $interval0 = $heure_debut0->diff($heure_fin0);
+
+    //Convertir tout en minute
+    $duree_minute = ($interval0->h * 60) + $interval0->i;
+
+    // Requêtepo recuperer l'heure minimale
+    $reqMin = $pdo_init->prepare("
+        SELECT heure_minimale
+        FROM salles
+        WHERE id= ?
+    ");
+    $reqMin->execute([$salle_id]);
+    $heure_minimale = (int) $reqMin->fetchColumn();
+    $heure_enHeure = $heure_minimale/60;
+
+
     // 1️⃣ Vérifier que l'heure de fin est après l'heure de début
     if ($heure_fin <= $heure_debut) {
         $message = "❌ L'heure de fin doit être après l'heure de début.";
     } elseif ($date < $currentDate) {
         // 1️⃣ Vérifier que la date n'est pas dans le passé
         $message = "❌ La date de réservation ne peut pas être dans le passé.";
+    } elseif($duree_minute < $heure_minimale){
+        if($heure_minimale >= 60) {
+            $message = "❌ Cette salle nécessite une reservations minimale de $heure_enHeure h.";
+            } else{
+                $message = "❌ Cette salle nécessite une reservations minimale de $heure_minimale minute.";
+            }
     }
     else {
 
