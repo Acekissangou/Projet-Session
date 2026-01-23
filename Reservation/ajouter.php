@@ -44,7 +44,7 @@ $nomUser = strtoupper($nomUser); // tout en majuscule
 $initiale = strtoupper(substr($nomUser, 0, 1));
 
 // Requête de base (filtrée ou non)
-$sql = "SELECT id, nom, capacite, categorie, description FROM salles";
+$sql = "SELECT id, nom, capacite, categorie, description, heure_minimale, heure_max, heure_limite FROM salles";
 $params = [];
 
 if (!empty($_GET['categorie'])) {
@@ -153,6 +153,8 @@ $reservationsLink = ($roleUser === 'admin')
             <span>Déconnexion</span>
         </a>
     </aside>
+
+    <div id="overlay"></div>
     
     <div class="container">
         <div class="img"></div>
@@ -182,18 +184,20 @@ $reservationsLink = ($roleUser === 'admin')
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        
                         <th>Nom de la salle</th>
                         <th>Capacité</th>
                         <th>Catégorie</th>
                         <th>Description</th>
                         <th>Images</th>
+                        <th>Temps minimal</th>
+                        <th>Temps limite</th>
+                        <th>Heure de Fermeture</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach($salles as $salle): ?>
                 <tr>
-                <td><?= htmlspecialchars($salle['id']) ?></td>
                 <td><?= htmlspecialchars($salle['nom']) ?></td>
                 <td><?= htmlspecialchars($salle['capacite']) ?></td>
                 <td><?= htmlspecialchars($salle['categorie']) ?></td>
@@ -203,6 +207,15 @@ $reservationsLink = ($roleUser === 'admin')
                 <td>
                         <button class="btn-img"><a href="../Salles/carousel.php?salle_id=<?= $salle['id'] ?>">Images</a></button>
 
+                </td>
+                <td>
+                    <?= htmlspecialchars($salle['heure_minimale']) ?>
+                </td>
+                <td>
+                    <?= htmlspecialchars($salle['heure_limite']) ?>
+                </td>
+                <td>
+                    <?= htmlspecialchars($salle['heure_max']) ?>
                 </td>
                 </tr>
                 <?php endforeach; ?>

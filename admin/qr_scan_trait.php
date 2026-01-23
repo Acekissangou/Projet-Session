@@ -52,6 +52,8 @@ if ($update->rowCount() === 0) {
 }
 ?>
 
+<link rel="stylesheet" href="../style/scan_qr.css">
+
 <h3>✅ Réservation valide</h3>
 
 <ul>
@@ -71,3 +73,5 @@ if ($update->rowCount() === 0) {
         <?= htmlspecialchars($reservation['heure_fin']) ?>
     </li>
 </ul>
+
+

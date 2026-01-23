@@ -42,6 +42,28 @@
     /* transition: transform 0.3s ease; */
 }
 
+/* Overlay */
+#overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 998;
+}
+
+
+/* Quand modal actif */
+.modal-active #overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Bloque le scroll */
+body.modal-active {
+    overflow: hidden;
+}
 
 
 .sidebar {
@@ -57,13 +79,14 @@
     flex-direction: column;
     transition: transform 0.3s ease;
     z-index: 1500;
-    /* display: none; */
+    transform: translateX(-100%);
 
 }
 
 .sidebar.closed {
-    transform: translateX(-100%);
+    transform: translateX(0%);
 }
+
 
 .sidebar-logo{
     text-align: center;

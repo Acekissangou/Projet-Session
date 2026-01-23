@@ -190,3 +190,13 @@ form .champ{
     font-size: 14px;
 }
 
+.succes{
+     color: #2dec59;
+    background: rgba(59, 255, 75, 0.1);
+    margin-top: 20px;
+    padding: 6px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}

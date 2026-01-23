@@ -77,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <?php if (!empty($error_msg)) { ?>
                 <p class="error"><?php echo $error_msg; ?></p>
                 <?php } ?>
+
                 
                 <form action="" method="POST">
                     <div class="champ">

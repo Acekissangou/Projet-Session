@@ -121,6 +121,28 @@ body {
 }
 
 
+/* Overlay */
+#overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.3s;
+    z-index: 998;
+}
+
+
+/* Quand modal actif */
+.modal-active #overlay {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Bloque le scroll */
+body.modal-active {
+    overflow: hidden;
+}
 
 .sidebar {
     width: 250px;
@@ -135,11 +157,13 @@ body {
     flex-direction: column;
     transition: transform 0.3s ease;
     z-index: 2000;
+    transform: translateX(-100%);
+
 
 }
 
 .sidebar.closed {
-    transform: translateX(-100%);
+    transform: translateX(0%);
 }
 
 .sidebar-logo{
@@ -288,7 +312,7 @@ h1 {
 .png{
     width: 200px;
     height: 200px;
-    background-image: url('../images/meet.png');
+    background-image: url('../images/meet1.png');
     background-size: cover;
     background-position: center;
     position: absolute;
@@ -297,13 +321,14 @@ h1 {
 }
 
 .png1{
-    width: 170px;
-    height: 170px;
-    background-image: url('../images/meet1.png');
+    width: 200px;
+    height: 200px;
+    background-image: url('../images/coffe.png');
     background-size: cover;
     background-position: center;
     position: absolute;
     right: 30px;
+    top: -5px;
 }
 
 

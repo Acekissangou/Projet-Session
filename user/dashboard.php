@@ -11,6 +11,8 @@ if (!isset($_SESSION['connected']) || $_SESSION['connected'] !== true) {
 //Variables pour l'affichage des stats
 $currentDate = date('Y-m-d');
 $currentTime = date('H:i:s');
+$now = new DateTime(); // ✅ correction : date + heure complètes
+
 
 
 
@@ -48,39 +50,76 @@ $reqReservations = $pdo_init->prepare(
     $heure_debut  = $_POST['heure_debut'];
     $heure_fin    = $_POST['heure_fin'];
     
-    //Variables pour vérification (en cours)
-    $heureDebut0 = new DateTime($heure_debut);
-    $heureFin0   = new DateTime($heure_fin);
-    $interval0 = $heureDebut0->diff($heureFin0);
+    // DateTime complets
+    $debutReservation = new DateTime("$date $heure_debut"); // ✅ correction
+    $finReservation   = new DateTime("$date $heure_fin");   // ✅ correction
 
-    // Durée en minute
-    $dureeMinute = ($interval0->h * 60) + $interval0->i;
+    // Durée de réservation en minutes
+    $interval = $debutReservation->diff($finReservation);
+    $duree_minute = ($interval->h * 60) + $interval->i;
 
-    // Requêtepo recuperer l'heure minimale
-    $reqMin = $pdo_init->prepare("
-        SELECT heure_minimale
+    // Récupération des règles de la salle
+    $req = $pdo_init->prepare("
+        SELECT 
+            heure_minimale,
+            heure_max,
+            delai_reservation,
+            heure_limite
         FROM salles
-        WHERE id= ?
+        WHERE id = ?
     ");
-    $reqMin->execute([$salle_id]);
-    $heure_minimale = (int) $reqMin->fetchColumn();
-    $heure_enHeure = $heure_minimale/60;
+    $req->execute([$salle_id]);
+    $salle = $req->fetch(PDO::FETCH_ASSOC);
 
+    $heure_minimale    = (int) $salle['heure_minimale'];   // en minutes
+    $heure_max         = $salle['heure_max'];              // TIME
+    $delai_reservation = (int) $salle['delai_reservation']; // en heures
+    $heure_limite      = (int) $salle['heure_limite'];      // en heures
 
-    // 1️⃣ Vérifier que l'heure de fin est après l'heure de début
-    if ($heure_fin <= $heure_debut) {
+    // Conversion heure max en DateTime
+    $heureMaxObj = new DateTime("$date $heure_max");
+
+    // Calcul délai avant réservation (en minutes)
+    $diffMinutes = ($debutReservation->getTimestamp() - $now->getTimestamp()) / 60;
+
+     /*  VALIDATIONS  */
+
+    // 1️⃣ Heure de fin après heure de début
+    if ($finReservation <= $debutReservation) {
         $message = "❌ L'heure de fin doit être après l'heure de début.";
-    } elseif ($dureeMinute < $heure_minimale) {
-        if($heure_minimale >= 60) {
-            $message = "❌ Cette salle nécessite une reservations minimale de $heure_enHeure h.";
-            } else{
-                $message = "❌ Cette salle nécessite une reservations minimale de $heure_minimale minute.";
-            }
-    } elseif($date < $currentDate){
-        // 1️⃣ Vérifier que la date n'est pas dans le passé
+
+    // 2️⃣ Date pas dans le passé
+    } elseif ($date < $currentDate) {
         $message = "❌ La date de réservation ne peut pas être dans le passé.";
-    }
-    else {
+
+    // 3️⃣ Durée minimale
+    } elseif ($duree_minute < $heure_minimale) {
+
+        $h = intdiv($heure_minimale, 60);
+        $m = $heure_minimale % 60;
+
+        if ($h > 0 && $m > 0) {
+            $message = "❌ Cette salle nécessite une réservation minimale de {$h}h {$m}min.";
+        } elseif ($h > 0) {
+            $message = "❌ Cette salle nécessite une réservation minimale de {$h}h.";
+        } else {
+            $message = "❌ Cette salle nécessite une réservation minimale de {$m} minutes.";
+        }
+
+    // 4️⃣ Délai minimum avant réservation
+    } elseif ($diffMinutes < ($delai_reservation * 60)) {
+        $message = "❌ Votre réservation doit être faite au minimum {$delai_reservation}h avant l'heure de début.";
+
+    // 5️⃣ Heure de fermeture
+    } elseif ($finReservation > $heureMaxObj) {
+        $message = "❌ La fermeture de la salle est prévue pour $heure_max.";
+
+    // 6️⃣ Durée maximale autorisée
+    } elseif ($duree_minute > ($heure_limite)) {
+        $heure_limite_enHeure = $heure_limite / 60;
+        $message = "❌ Cette salle ne peut pas être réservée pour plus de {$heure_limite_enHeure}h.";
+
+    } else {
 
         // 2️⃣ Vérifier si la salle est déjà réservée sur ce créneau
         $check = $pdo_init->prepare("
@@ -146,7 +185,8 @@ $reqReservations = $pdo_init->prepare("
         r.date_reservation,
         r.heure_debut,
         r.heure_fin,
-        r.qr_token
+        r.qr_token,
+        r.qr_used
     FROM reservations r
     JOIN salles s ON r.salle_id = s.id
     WHERE r.user_id = ?
@@ -164,6 +204,7 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../style/style0.css">
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
@@ -188,8 +229,9 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
 
 <aside class="sidebar" id="sidebar">
 
+    
     <i class="fa-solid fa-bars bur-ger" id="menu-btn2"></i>
-
+    
     <div class="sidebar-logo">
         <span>VotreEspace✨</span>
     </div>
@@ -199,49 +241,52 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
         <span><?= htmlspecialchars($nomUser) ?></span>
         <p>User</p>
     </div>
-
+    
     <nav class="sidebar-menu">
         <a href="#" class="active">
             <i class="fa-solid fa-chart-line"></i>
             <span>Dashboard</span>
         </a>
-
+        
         <a href="../Reservation/ajouter.php">
-                <i class="fa-solid fa-plus"></i>
-                <span>Nouvelle réservation</span>
-            </a>
-
-            <a href="#section">
+            <i class="fa-solid fa-plus"></i>
+            <span>Nouvelle réservation</span>
+        </a>
+        
+        <a href="#section">
                 <i class="fa-solid fa-calendar-days"></i>
                 <span>Mes réservations</span>
             </a>
-
+            
             <a href="../Reservation/ajouter.php#list-container">
                 <i class="fa-solid fa-building"></i>
                 <span>Salles</span>
             </a>
     </nav>
-
+    
     <div class="sidebar-logout">
         <a href="../logout.php">
             <i class="fa-solid fa-right-from-bracket"></i>
             <span>Déconnexion</span>
         </a>
-</aside>
-
+    </aside>
+    
+    <div id="overlay"></div>
+    
 <main class="container">
 
     <h1>Dashboard</h1>
     <p class="subtitle">Réservez vos salles en toute simplicité.</p>
     
 <?php if (!empty($_GET['message'])): ?>
-    <?php 
-        $isError = str_contains($_GET['message'], '❌'); // si le message contient ❌ → erreur
-        $msgClass = $isError ? 'error' : 'success';
-    ?>
-    <p class="message <?= $msgClass ?>">
-        <?= htmlspecialchars($_GET['message']) ?>
-    </p>
+<script>
+Swal.fire({
+    icon: <?= str_contains($_GET['message'], '❌') ? "'error'" : "'success'" ?>,
+    title: <?= str_contains($_GET['message'], '❌') ? "'Erreur'" : "'Succès'" ?>,
+    text: <?= json_encode($_GET['message']) ?>,
+    confirmButtonText: 'OK'
+});
+</script>
 <?php endif; ?>
 
 
@@ -333,18 +378,39 @@ $reservations = $reqReservations->fetchAll(PDO::FETCH_ASSOC);
                                     ?>
                     </td>
                     <td>
+                        <?php if($res['date_reservation'] < $currentDate || ($res['date_reservation'] == $currentDate && $res['heure_fin'] < $currentTime)):?>
+                        <p>Qr code éffacé</p>   
+                        <?php elseif($res['qr_used'] === 0):?>
                         <button class="qr_code_btn" data-token="<?= $res['qr_token'] ?>"><i class="fa-solid fa-qrcode"></i></button>
+                        <?php else:?>
+                        <p>Qr code déjà utilisé</p>
+                        <?php endif; ?>
                     </td>
                     <td>
+                        <?php if($res['date_reservation'] > $currentDate || $res['date_reservation'] == $currentDate && $res['heure_debut'] > $currentTime):?>
                         <form action="../Reservation/annuler.php" method="POST" onsubmit="return confirm('Annuler cette réservation ?');">
                             <input type="hidden" name="reservation_id" value="<?= $res['id'] ?>">
                             <button type="submit" class="btn-cancel">
                                 Annuler
                             </button>
                         </form>
+                        <?php elseif($res['date_reservation'] == $currentDate && $res['heure_debut'] <= $currentTime && $res['heure_fin'] >= $currentTime):?>
+                        <form onsubmit="return alert('Vous ne pouvez pas annuler une réservation en cours');">
+                            <button type="submit" class="btn-cancel">
+                                Annuler
+                            </button>
+                        </form>
+                        <?php else:?>
+                            <form action="../Reservation/annuler.php" method="POST" onsubmit="return confirm('Effacer cette réservation ?');">
+                            <input type="hidden" name="reservation_id" value="<?= $res['id'] ?>">
+                            <button type="submit" class="btn-cancel">
+                                Effacer
+                            </button>
+                        </form> 
+                        <?php endif; ?>
                     </td>
                 </tr>
-                <?php endforeach; ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
     <?php endif; ?>

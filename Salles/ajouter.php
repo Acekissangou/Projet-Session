@@ -39,12 +39,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $categorie = trim($_POST['categorie']);
     $descriptions = trim($_POST['descriptions'] ?? '');
     $heure_minimale = trim($_POST['heure_minimale']);
+    $heure_maximale = trim($_POST['heure_max']);
+    $heure_limite = trim($_POST['heure_limite']);
 
-    if (empty($nom) || $capacite <= 0 || empty($categorie) || empty($descriptions) || empty($heure_minimale)) {
+
+
+
+    if (empty($nom) || $capacite <= 0 || empty($categorie) || empty($descriptions) || empty($heure_minimale)|| empty($heure_maximale) || empty($heure_limite)) {
         $message = "❌ Tous les champs sont obligatoires et la capacité doit être > 0.";
     } else {
-        $insert = $pdo_init->prepare("INSERT INTO salles (nom, capacite, categorie, description, heure_minimale) VALUES (?, ?, ?, ?, ?)");
-        $insert->execute([$nom, $capacite, $categorie, $descriptions, $heure_minimale]);
+        $insert = $pdo_init->prepare("INSERT INTO salles (nom, capacite, categorie, description, heure_minimale, heure_max, heure_limite) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $insert->execute([$nom, $capacite, $categorie, $descriptions, $heure_minimale, $heure_maximale, $heure_limite]);
         $message = "✅ Salle ajoutée avec succès.";
     }
 }
@@ -150,32 +155,36 @@ $reservationsLink = ($roleUser === 'admin')
         </a>
 </aside>
 
+<div id="overlay"></div>
+<main class="container">
 
-<h1>Gestion des salles</h1>
-
+    <h1>Gestion des salles</h1>
+    
 <?php if (!empty($message)): ?>
     <p id="flash-message" class="message <?= strpos($message, '❌') === false ? 'success' : 'error' ?>">
         <?= htmlspecialchars($message) ?>
     </p>
-<?php endif; ?>
-
-<button class="btn btn-add" onclick="toggleForm()">
-    <i class="fa-solid fa-plus"></i> Ajouter une salle
-</button>
-
-<div class="form-add" id="formSalle">
-    <form method="POST" action="">
-        <input type="text" name="nom" placeholder="Nom de la salle" required>
-        <input type="number" name="capacite" placeholder="Capacité" required min="1">
-        <input type="text" name="categorie" placeholder="Catégorie de la salle" required>
-        <input type="text" name="descriptions" placeholder="Descriptions" required>
-        <input type="number" name = "heure_minimale" placeholder="Heure minimale en Min" id="heure_minimale" min="1" step="1" required>
-        <button type="submit" class="btn btn-add">
-            <i class="fa-solid fa-floppy-disk"></i> Enregistrer
-        </button>
-    </form>
-</div>
-
+    <?php endif; ?>
+    
+    <button class="btn btn-add" onclick="toggleForm()">
+        <i class="fa-solid fa-plus"></i> Ajouter une salle
+    </button>
+    
+    <div class="form-add" id="formSalle">
+        <form method="POST" action="">
+            <input type="text" name="nom" placeholder="Nom de la salle" required>
+            <input type="number" name="capacite" placeholder="Capacité" required min="1">
+            <input type="text" name="categorie" placeholder="Catégorie de la salle" required>
+            <input type="text" name="descriptions" placeholder="Descriptions" required>
+            <input type="number" name = "heure_minimale" placeholder="Heure minimale d'occupation par réservation en Min" id="heure_minimale" min="1" step="1" required>
+            <input type="time" name = "heure_max" placeholder="Heure de fermeture">
+            <input type="number" name = "heure_limite" placeholder="Heure limite d'occupation par réservation en Min" id="heure_limite" min="1" step="1" required>
+            <button type="submit" class="btn btn-add">
+                <i class="fa-solid fa-floppy-disk"></i> Enregistrer
+            </button>
+        </form>
+    </div>
+    
 <?php if (empty($salles)): ?>
     <p class="vide">😕 Pas de salle enregistrée</p>
 <?php else: ?>
@@ -188,6 +197,8 @@ $reservationsLink = ($roleUser === 'admin')
                 <th>Descriptions</th>
                 <th>Images</th>
                 <th>Heure Minimale</th>
+                <th>Heure de fermeture</th>
+                <th>Heure limite</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -207,45 +218,65 @@ $reservationsLink = ($roleUser === 'admin')
                         <?= htmlspecialchars($salle['heure_minimale']) ?><span> min</span>
                     </td>
                     <td>
+                        <?= htmlspecialchars($salle['heure_max']) ?>
+                    </td>
+                    <td>
+                        <?= htmlspecialchars($salle['heure_limite']) ?> <span>min</span>
+                    </td>
+                    <td>
                         <a href="../Salles/modifier.php?id=<?= $salle['id'] ?>" class="btn btn-edit">
                             <i class="fa-solid fa-pen"></i>
                         </a>
                         <a href="../Salles/supprimer.php?id=<?= $salle['id'] ?>" class="btn btn-del"
-                           onclick="return confirm('Supprimer cette salle ?')">
-                            <i class="fa-solid fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
+                        onclick="return confirm('Supprimer cette salle ?')">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
-<div id="modalDescription" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Description de la salle</h3>
-        <p id="modalText"></p>
+    <div id="modalDescription" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Description de la salle</h3>
+            <p id="modalText"></p>
+        </div>
     </div>
-</div>
-
-<?php endif; ?>
+    
+    <?php endif; ?>
+</main>
 
 <script>
 const menuBtn = document.getElementById("menu-btn");
 const menuBtn2 = document.getElementById("menu-btn2");
 const sidebar = document.getElementById("sidebar");
+const content = document.querySelector(".container");
+const overlay = document.getElementById("overlay");
 
-// Sécurité : on vérifie l'existence
-if (menuBtn && sidebar) {
-    menuBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("closed");
-    });
+
+function toggleSidebar() {
+    sidebar.classList.toggle("closed");
+    content.classList.toggle("full");
+    document.body.classList.toggle("modal-active");
 }
 
-if (menuBtn2 && sidebar) {
-    menuBtn2.addEventListener("click", () => {
-        sidebar.classList.toggle("closed");
-    });
-}
+// Boutons
+menuBtn?.addEventListener("click", toggleSidebar);
+menuBtn2?.addEventListener("click", toggleSidebar);
+
+// Clic sur overlay → fermer
+overlay?.addEventListener("click", toggleSidebar);
+
+// Touche Échap → fermer
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !sidebar.classList.contains("closed")) {
+        toggleSidebar();
+    }
+});
+
+
+
 
 function toggleForm() {
     const form = document.getElementById('formSalle');

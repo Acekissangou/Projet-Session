@@ -53,15 +53,29 @@ document.addEventListener("DOMContentLoaded", function () {
 const menuBtn = document.getElementById("menu-btn");
 const menuBtn2 = document.getElementById("menu-btn2");
 const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
+const content = document.querySelector(".container");
 
-menuBtn.addEventListener("click", () => {
+
+
+function toggleSidebar() {
     sidebar.classList.toggle("closed");
     content.classList.toggle("full");
-});
+    document.body.classList.toggle("modal-active");
+}
 
-menuBtn2.addEventListener("click", () => {
-    sidebar.classList.toggle("closed");
-    content.classList.toggle("full");
+// Boutons
+menuBtn?.addEventListener("click", toggleSidebar);
+menuBtn2?.addEventListener("click", toggleSidebar);
+
+// Clic sur overlay → fermer
+overlay?.addEventListener("click", toggleSidebar);
+
+// Touche Échap → fermer
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !sidebar.classList.contains("closed")) {
+        toggleSidebar();
+    }
 });
 
 

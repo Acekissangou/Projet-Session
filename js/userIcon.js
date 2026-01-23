@@ -6,23 +6,28 @@ const menuBtn2 = document.getElementById("menu-btn2");
 const sidebar = document.getElementById("sidebar");
 const content = document.querySelector(".container");
 const message = document.querySelector('.message');
+const overlay = document.getElementById("overlay");
 const maDiv = document.querySelector('.upload-profil');
 
-// Toggle sidebar
-if (menuBtn && sidebar && content) {
-    menuBtn.addEventListener("click", () => {
-        sidebar.classList.toggle("closed");
-        content.classList.toggle("full");
-    });
+function toggleSidebar() {
+    sidebar.classList.toggle("closed");
+    content.classList.toggle("full");
+    document.body.classList.toggle("modal-active");
 }
 
-// Toggle sidebar
-if (menuBtn2 && sidebar && content) {
-    menuBtn2.addEventListener("click", () => {
-        sidebar.classList.toggle("closed");
-        content.classList.toggle("full");
-    });
-}
+// Boutons
+menuBtn?.addEventListener("click", toggleSidebar);
+menuBtn2?.addEventListener("click", toggleSidebar);
+
+// Clic sur overlay → fermer
+overlay?.addEventListener("click", toggleSidebar);
+
+// Touche Échap → fermer
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !sidebar.classList.contains("closed")) {
+        toggleSidebar();
+    }
+});
 
 // Message auto-disparition
 if (message) {
